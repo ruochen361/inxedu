@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/doc.min.css">
+    <link rel="stylesheet" href="/ztree/zTreeStyle.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="col-sm-3 col-md-2 sidebar">
+        <div class="tree">
+            <ul style="padding-left:0px;" class="list-group">
+                <li class="list-group-item tree-closed">
+                    <a href="main.html"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
+                </li>
+                <li class="list-group-item tree-closed">
+                        <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 学员管理 <span class="badge"
+                                                                                             style="float:right">1</span></span>
+                    <ul style="margin-top:10px;display:none;">
+                        <li style="height:30px;">
+                            <a href="http://localhost:9001/user/list" ><i class="glyphicon glyphicon-user"></i> 学员列表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item tree-closed">
+                        <span><i class="glyphicon glyphicon-ok"></i> 教师管理 <span class="badge"
+                                                                                style="float:right">2</span></span>
+                    <ul style="margin-top:10px;display:none;">
+                        <li style="height:30px;">
+                            <a href="http://localhost:9002/teacher/list"><i class="glyphicon glyphicon-check"></i> 教师列表</a>
+                        </li>
+                        <li style="height:30px;">
+                            <a href="http://localhost:9002/teacher/toAdd"><i class="glyphicon glyphicon-check"></i> 添加教师</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item tree-closed">
+                    <span><i class="glyphicon glyphicon-th-large"></i> 课程管理 <span class="badge" style="float:right">2</span></span>
+                    <ul style="margin-top:10px;display:none;">
+                        <li style="height:30px;">
+                            <a href=http://localhost:9003/subject/index><i class="glyphicon glyphicon-picture"></i> 专业管理</a>
+                        </li>
+                        <li style="height:30px;">
+                            <a href="http://localhost:9003/course/list"><i class="glyphicon glyphicon-equalizer"></i> 课程管理</a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</body>
+</html>

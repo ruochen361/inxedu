@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">教育平台 - 教师维护</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> 张三 <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:include="treeInfo"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 教师列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <form id="searchForm" class="form-inline" role="form" style="float:left;">
+
+                            <input id="searchKey" class="form-control has-success" type="text"
+                                   placeholder="教师名">
+                            <select id="isStar" class="form-control has-success">
+                                <option th:value="1" th:text="高级讲师"></option>
+                                <option th:value="2" th:text="首席教师"></option>
+                            </select>
+                            添加时间<input id="minTime" style="width: 170px" type="date" class="form-control has-success"
+                                       placeholder="开始添加时间">
+                            <input id="maxTime" style="width: 170px" type="date" class="form-control has-success"
+                                   placeholder="结束添加时间">
+                        </form>
+                        <button type="button" id="searchBtn" class="btn btn-warning"><i
+                                class="glyphicon glyphicon-search"></i> 查找 </button>
+                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-remove"></i> 清空</button>
+                    </div>
+
+                    <!--<button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>-->
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30">ID</th>
+                                <th width="50">名称</th>
+                                <th width="50">头衔</th>
+                                <th width="100">资历</th>
+                                <th width="100">简介</th>
+                                <th width="60">添加时间</th>
+                                <th width="40">排序</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="teacher:${teacherList}">
+
+                                <td th:text="${teacher.id}"></td>
+                                <td th:text="${teacher.name}"></td>
+                                <td th:text="(${teacher.isStar}=='1')?'高级讲师':'首席讲师'"></td>
+                                <td th:text="${teacher.education}"></td>
+                                <td th:text="${teacher.career}"></td>
+                                <td th:text="${#dates.format(teacher.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td th:text="${teacher.sort}"></td>
+
+                                <td>
+                                    <button type="button" onclick="toUpdate(this)" th:value="${teacher.id}" class="btn btn-danger btn-xs"><i
+                                            class=" glyphicon glyphicon-pencil"></i>修改</button>
+                                    <button type="button"  th:value="${teacher.id}" class="btn btn-danger btn-xs"><i
+                                            class=" glyphicon glyphicon-remove"></i>删除</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="8" align="center">
+                                    <ul class="pagination">
+                                        <li class="disabled"><a href="#">上一页</a></li>
+                                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#">下一页</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/jquery/jquery-2.1.1.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/script/docs.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+
+    /*模糊查询*/
+    $("#searchBtn").click(function () {
+        /*alert($("#minTime").val());*/
+        $.ajax({
+           type:"post",
+            url:"/teacher/search",
+            data:{
+                searchKey:$("#searchKey").val(),
+                isStar:$("#isStar").val(),
+                minTime:$("#minTime").val(),
+                maxTime:$("#maxTime").val()
+            },
+            beforeSend:function () {
+               return true
+            },
+            success:function (result) {
+               if (result.success){
+                   var teacherList = result.teacherList;
+                   //console.log(userList)
+                   var content = "";
+                   $.each(teacherList,function (i,n) {
+
+                  content+=' <tr>';
+                  content+='         <td >'+n.id+'</td>';
+                  content+='         <td >'+n.name+'</td>';
+                  if (n.isStar=="1"){
+                      content+='         <td >高级讲师</td>';
+                  }else {
+                      content+='         <td >首席讲师</td>';
+                  }
+
+                  content+='         <td >'+n.education+'</td>';
+                  content+='         <td >'+n.career+'</td>';
+                  content+='         <td >'+new Date(n.createTime)+'</td>';
+                  content+='         <td >'+n.sort+'</td>';
+                  content+='         <td>';
+                  content+='         <button type="button" class="btn btn-primary btn-xs"><i';
+                  content+=' class=" glyphicon glyphicon-pencil"></i>修改';
+                  content+='         </button>';
+                  content+='         <button type="button" class="btn btn-danger btn-xs"><i';
+                  content+=' class=" glyphicon glyphicon-remove"></i>删除';
+                  content+='         </button>';
+                  content+='         </td>';
+                  content+='         </tr>';
+
+                   });
+                   //console.log(content);
+                   $("tbody").html(content);
+               }
+
+            }
+
+        });
+
+    });
+
+    function toUpdate(n) {
+        var userId = $(n).val()
+        window.location = 'http://localhost:9002/teacher/toUpdate?id='+userId;
+    }
+
+
+
+    //冻结
+    function updateAvalible(n){
+        var userId =$(n).val();
+        console.log(userId);
+
+        $.ajax({
+           type:"post",
+           url:"/user/updateAvalible",
+            data:{
+               userId:userId
+            },
+            beforeSend:function () {
+                return true;
+            },
+            success:function (result) {
+                if (result.success){
+                    window.location="http://localhost:9001/user/list";
+                };
+            }
+
+        });
+    }
+
+    //触发模态框的同时调用此方法
+    function model(n) {
+        var userId = $(n).val();
+        //向模态框中传值
+
+        $('#userId').val(userId);
+
+        /*$('#update').modal('show');*/
+    }
+    //提交更改
+    function updatePassword() {
+        console.log($('#firstPassword').val());
+        console.log($('#secondPassword').val());
+        console.log($('#userId').val());
+        $.ajax({
+            type: "post",
+            url: "/user/updatePassword",
+            data: {
+                firstPassword:$('#firstPassword').val(),
+                secondPassword:$('#secondPassword').val(),
+                userId:$('#userId').val(),
+            },
+            success: function(result) {
+                if (result.success){
+                    $("#myModal").on("show.bs.modal", function() {
+                        $(this).removeData("bs.modal");
+                        $(this).modal('hide');
+                    });
+                    alert("success");
+                }else {
+                    alert(result.message);
+                };
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

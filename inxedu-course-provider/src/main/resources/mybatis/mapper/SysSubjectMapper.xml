@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.inxedu.dao.SysSubjectMapper">
+
+    <select id="selectAllByOrder" resultMap="subjectResult">
+        SELECT * FROM sys_subject ORDER BY sort DESC;
+    </select>
+    <resultMap id="subjectResult" type="com.atguigu.inxedu.bean.SysSubject" autoMapping="true">
+        <result column="SUBJECT_ID" property="subjectId"></result>
+    </resultMap>
+
+</mapper>

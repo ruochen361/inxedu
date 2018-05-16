@@ -1,0 +1,15 @@
+server:
+  port: 9002
+
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+
+
+spring:
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false

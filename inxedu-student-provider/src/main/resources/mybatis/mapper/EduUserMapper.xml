@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.inxedu.dao.EduUserMapper">
+
+    <select id="queryUserList"  parameterType="java.util.Map" resultMap="userResultMap">
+        SELECT `USER_ID`,`MOBILE`,`EMAIL`,`PASSWORD`,`USER_NAME`,
+        `SHOW_NAME`,`SEX`,`AGE`,`CREATE_TIME`,`IS_AVALIBLE`,`PIC_IMG`,
+        `BANNER_URL`,`MSG_NUM`,`SYS_MSG_NUM`,`LAST_SYSTEM_TIME`
+        FROM edu_user
+        <where >
+            <if test="searchKey!=null ">
+                EMAIL like concat('%',#{searchKey},'%') OR
+            </if>
+            <if test="searchKey!=null " >
+                MOBILE like concat('%',#{searchKey},'%') OR
+            </if>
+            <if test="searchKey!=null ">
+                USER_NAME like concat('%',#{searchKey},'%') OR
+            </if>
+            <if test="searchKey!=null ">
+                SHOW_NAME like concat('%',#{searchKey},'%') AND
+            </if>
+            <if test="minTime!=null and maxTime!=null ">
+                CREATE_TIME  BETWEEN #{minTime} AND #{maxTime} AND
+            </if>
+            <if test="isAvalible!=null ">
+                IS_AVALIBLE = #{isAvalible}
+            </if>
+
+        </where>
+    </select>
+    
+    <resultMap id="userResultMap" type="com.atguigu.inxedu.bean.EduUser" autoMapping="true">
+        <result column="USER_ID" property="userId"></result>
+    </resultMap>
+</mapper>

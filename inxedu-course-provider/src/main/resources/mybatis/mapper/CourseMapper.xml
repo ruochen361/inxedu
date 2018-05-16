@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.inxedu.dao.CourseMapper">
+
+    <select id="selectCourseList" resultMap="courseResultMap">
+        SELECT cou.* ,sub.`SUBJECT_NAME` FROM edu_course cou LEFT JOIN sys_subject sub
+        ON cou.`SUBJECT_ID` = sub.`SUBJECT_ID`
+    </select>
+    <resultMap id="courseResultMap" type="com.atguigu.inxedu.bean.EduCourse" autoMapping="true">
+        <result property="courseId" column="COURSE_Id"></result>
+    </resultMap>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="courseWithTeacher">
+
+        SELECT cou.* , et.`ID`,et.`NAME` FROM edu_course cou INNER JOIN edu_course_teacher ct
+        ON cou.`COURSE_ID` = ct.`COURSE_ID`
+        INNER JOIN edu_teacher et ON ct.`TEACHER_ID` = et.`ID`
+        WHERE cou.`COURSE_ID` =#{courseId}
+    </select>
+    <resultMap id="courseWithTeacher" type="com.atguigu.inxedu.bean.EduCourse"  autoMapping="true">
+        <result property="courseId" column="COURSE_Id"></result>
+        <collection property="teacherList" ofType="com.atguigu.inxedu.bean.EduTeacher" autoMapping="true">
+            <result property="id" column="id"></result>
+        </collection>
+    </resultMap>
+</mapper>

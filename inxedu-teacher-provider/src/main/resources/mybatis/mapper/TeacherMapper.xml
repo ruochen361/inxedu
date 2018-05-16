@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.inxedu.dao.TeacherMapper">
+
+    <select id="queryTeacherList"  parameterType="java.util.Map" resultMap="teacherResultMap">
+        SELECT `ID`,`NAME`,`EDUCATION`,`CAREER`,`IS_STAR`,`PIC_PATH`,
+        `STATUS`,`CREATE_TIME`,`UPDATE_TIME`,`SUBJECT_ID`,`SORT`
+        FROM edu_teacher
+        <where >
+            <if test="searchKey!=null ">
+                NAME like concat('%',#{searchKey},'%') AND
+            </if>
+            <if test="minTime!=null and maxTime!=null ">
+                CREATE_TIME  BETWEEN #{minTime} AND #{maxTime} AND
+            </if>
+            <if test="isStar!=null ">
+                IS_STAR = #{isStar}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="teacherResultMap" type="com.atguigu.inxedu.bean.EduTeacher" autoMapping="true">
+        <result column="ID" property="id"></result>
+    </resultMap>
+</mapper>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">教育平台 - 学员维护</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> 张三 <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:include="treeInfo"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 学员列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <form id="searchForm" class="form-inline" role="form" style="float:left;">
+
+                            <input id="searchKey" class="form-control has-success" type="text"
+                                   placeholder="邮箱/手机/昵称/姓名">
+                            <select id="isAvalible" class="form-control has-success">
+                                <option th:value="1" th:text="正常"></option>
+                                <option th:value="0" th:text="冻结"></option>
+                            </select>
+                            注册时间<input id="minTime" style="width: 170px" type="date" class="form-control has-success"
+                                       placeholder="开始注册时间">
+                            <input id="maxTime" style="width: 170px" type="date" class="form-control has-success"
+                                   placeholder="结束注册时间">
+                        </form>
+                        <button type="button" id="searchBtn" class="btn btn-warning"><i
+                                class="glyphicon glyphicon-search"></i> 查找学员 </button>
+                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-remove"></i> 清空</button>
+                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 导出Excel </button>
+                    </div>
+
+                    <!--<button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>-->
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="100">邮箱</th>
+                                <th width="100">手机号</th>
+                                <th width="50">用户名</th>
+                                <th width="50">昵称</th>
+                                <th width="40">性别</th>
+                                <th width="40">年龄</th>
+                                <th width="100">注册时间</th>
+                                <th width="50">状态</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user:${userList}">
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.mobile}"></td>
+                                <td th:text="${user.userName}"></td>
+                                <td th:text="${user.showName}"></td>
+                                <td th:text="(${user.sex}=='1')?'男':'女'"></td>
+                                <td th:text="${user.age}"></td>
+                                <td th:text="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td th:text="(${user.isAvalible}=='1')?'正常':'冻结'"></td>
+                                <td>
+                                    <!-- 按钮触发模态框 -->
+                                    <button type="button" onclick="model(this)" th:value="${user.userId}" class="btn btn-primary btn-lg" data-toggle="modal"  data-target="#myModal"><i
+                                            class=" glyphicon glyphicon-pencil"></i>修改密码</button>
+                                    <button type="button" onclick="updateAvalible(this)"  th:value="${user.userId}" class="btn btn-danger btn-xs"><i
+                                            class=" glyphicon glyphicon-remove"></i><div th:text="(${user.isAvalible}=='1')?'冻结':'解冻'"></div>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- 模态框（Modal） -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">修改用户密码</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                                密码：<input type="password" name="firstPassword" id="firstPassword">
+                                                确认密码：<input type="password" name="secondPassword" id="secondPassword">
+                                                <input type="hidden" name="userId" id="userId">
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-primary" onclick="updatePassword()" >修改</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal -->
+                            </div>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="9" align="center">
+                                    <ul class="pagination">
+                                        <li class="disabled"><a href="#">上一页</a></li>
+                                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#">下一页</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/jquery/jquery-2.1.1.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/script/docs.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+   /* $("tbody .btn-success").click(function () {
+        window.location.href = "assignRole.html";
+    });
+    $("tbody .btn-primary").click(function () {
+        window.location.href = "edit.html";
+    });*/
+
+
+
+    /*模糊查询*/
+    $("#searchBtn").click(function () {
+        /*alert($("#minTime").val());*/
+        $.ajax({
+           type:"post",
+            url:"/user/search",
+            data:{
+                searchKey:$("#searchKey").val(),
+                isAvalible:$("#isAvalible").val(),
+                minTime:$("#minTime").val(),
+                maxTime:$("#maxTime").val()
+            },
+            beforeSend:function () {
+               return true
+            },
+            success:function (result) {
+               if (result.success){
+                   var userList = result.userList;
+                   //console.log(userList)
+                   var content = "";
+                   $.each(userList,function (i,n) {
+
+                  content+=' <tr>';
+                  content+='         <td >'+n.email+'</td>';
+                  content+='         <td >'+n.mobile+'</td>';
+                  if(n.showName){
+                      content+='         <td >'+n.showName+'</td>';
+                  }else {
+                      content+='         <td ></td>';
+                  }
+                  if(n.showName){
+                      content+='         <td >'+n.showName+'</td>';
+                  }else {
+                      content+='         <td ></td>';
+                  }
+
+                  if(n.sex=="1"){
+                      content+='         <td >男</td>';
+                  }else{
+                      content+='         <td >女</td>';
+                  }
+
+                  content+='         <td >'+n.age+'</td>';
+                  content+='         <td >'+new Date(n.createTime)+'</td>';
+                   if(n.isAvalible=="1"){
+                       content+='         <td >正常</td>';
+                   }else{
+                       content+='         <td >冻结</td>';
+                   }
+                  content+='         <td>';
+                  content+='         <button type="button" class="btn btn-primary btn-xs"><i';
+                  content+=' class=" glyphicon glyphicon-pencil"></i>修改密码';
+                  content+='         </button>';
+                  content+='         <button type="button" class="btn btn-danger btn-xs"><i';
+                  content+=' class=" glyphicon glyphicon-remove"></i>冻结';
+                  content+='         </button>';
+                  content+='         </td>';
+                  content+='         </tr>';
+
+                   });
+                   //console.log(content);
+                   $("tbody").html(content);
+               }
+
+            }
+
+        });
+
+    });
+
+
+    //冻结
+    function updateAvalible(n){
+        var userId =$(n).val();
+        console.log(userId);
+
+        $.ajax({
+           type:"post",
+           url:"/user/updateAvalible",
+            data:{
+               userId:userId
+            },
+            beforeSend:function () {
+                return true;
+            },
+            success:function (result) {
+                if (result.success){
+                    window.location="http://localhost:9001/user/list";
+                };
+            }
+
+        });
+    }
+
+    //触发模态框的同时调用此方法
+    function model(n) {
+        var userId = $(n).val();
+        //向模态框中传值
+
+        $('#userId').val(userId);
+
+        /*$('#update').modal('show');*/
+    }
+    //提交更改
+    function updatePassword() {
+        console.log($('#firstPassword').val());
+        console.log($('#secondPassword').val());
+        console.log($('#userId').val());
+        $.ajax({
+            type: "post",
+            url: "/user/updatePassword",
+            data: {
+                firstPassword:$('#firstPassword').val(),
+                secondPassword:$('#secondPassword').val(),
+                userId:$('#userId').val()
+            },
+            success: function(result) {
+                if (result.success){
+                    $("#myModal").on("show.bs.modal", function() {
+                        $(this).removeData("bs.modal");
+                        $(this).modal('hide');
+                    });
+                    alert("success");
+                }else {
+                    alert(result.message);
+                };
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
