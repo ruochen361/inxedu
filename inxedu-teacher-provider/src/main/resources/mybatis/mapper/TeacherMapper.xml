@@ -24,4 +24,38 @@
     <resultMap id="teacherResultMap" type="com.atguigu.inxedu.bean.EduTeacher" autoMapping="true">
         <result column="ID" property="id"></result>
     </resultMap>
+
+    <select id="count" parameterType="java.util.Map" resultType="integer">
+        select count(id) from edu_teacher
+        <where>
+            <if test="searchKey!=null ">
+                NAME like concat('%',#{searchKey},'%') AND
+            </if>
+            <if test="minTime!=null and maxTime!=null ">
+                CREATE_TIME  BETWEEN #{minTime} AND #{maxTime} AND
+            </if>
+            <if test="isStar!=null ">
+                IS_STAR = #{isStar}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryList" parameterType="java.util.Map" resultMap="teacherResultMap">
+        select `ID`,`NAME`,`EDUCATION`,`CAREER`,`IS_STAR`,`PIC_PATH`,
+        `STATUS`,`CREATE_TIME`,`UPDATE_TIME`,`SUBJECT_ID`,`SORT`
+        from edu_teacher
+        <where>
+        <if test="searchKey!=null ">
+            NAME like concat('%',#{searchKey},'%') AND
+        </if>
+        <if test="minTime!=null and maxTime!=null ">
+            CREATE_TIME  BETWEEN #{minTime} AND #{maxTime} AND
+        </if>
+        <if test="isStar!=null ">
+            IS_STAR = #{isStar}
+        </if>
+        limit #{startindex},#{pagesize}
+        </where>
+    </select>
+
 </mapper>

@@ -2,6 +2,7 @@ package com.atguigu.inxedu.controller;
 
 import com.atguigu.inxedu.bean.EduTeacher;
 import com.atguigu.inxedu.bean.EduUser;
+import com.atguigu.inxedu.bean.Page;
 import com.atguigu.inxedu.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,5 +49,16 @@ public class TeacherController {
     @RequestMapping("/teacher/doUpdate")
     public void updateTeacher(@RequestBody EduTeacher eduTeacher){
         teacherService.updateTeacher(eduTeacher);
+    }
+
+
+
+    @RequestMapping("/teacher/querylist")
+    public Page<EduTeacher> queryPage(@RequestBody Map<String, Object> paramMap){
+
+
+        Page<EduTeacher> page = teacherService.queryPage(paramMap);
+
+        return page;
     }
 }

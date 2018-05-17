@@ -2,6 +2,7 @@ package com.atguigu.inxedu.service.impl;
 
 import com.atguigu.inxedu.bean.EduTeacher;
 import com.atguigu.inxedu.bean.EduUser;
+import com.atguigu.inxedu.bean.Page;
 import com.atguigu.inxedu.dao.TeacherMapper;
 import com.atguigu.inxedu.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,28 @@ public class TeacherServiceImpl implements TeacherService {
     public void updateTeacher(EduTeacher eduTeacher) {
 
         teacherMapper.updateByPrimaryKeySelective(eduTeacher);
+    }
+
+
+    @Override
+    public Page<EduTeacher> queryPage(Map<String, Object> paramMap) {
+
+        Integer pageno = Integer.parseInt((String) paramMap.get("pageno"));
+        Integer pagesize = Integer.parseInt((String) paramMap.get("pagesize"));
+
+        Page<EduTeacher> page = new Page(pageno,pagesize);
+
+        int startindex = page.getStartindex();
+        paramMap.put("startindex", startindex);
+        List<EduTeacher> datas=teacherMapper.queryList(paramMap);
+
+        Integer totalsize =teacherMapper.count(paramMap);
+
+        page.setDatas(datas);
+        page.setTotalsize(totalsize);
+
+        Integer totalno = totalsize%pagesize>0?(totalsize/pagesize+1):(totalsize/pagesize);
+        page.setTotalno(totalno);
+        return page;
     }
 }

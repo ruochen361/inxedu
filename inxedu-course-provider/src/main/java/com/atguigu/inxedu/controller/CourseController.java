@@ -1,6 +1,7 @@
 package com.atguigu.inxedu.controller;
 
 import com.atguigu.inxedu.bean.EduCourse;
+import com.atguigu.inxedu.bean.EduCourseKpoint;
 import com.atguigu.inxedu.bean.SysSubject;
 import com.atguigu.inxedu.service.CourseService;
 import com.atguigu.inxedu.service.SysSubjectService;
@@ -60,5 +61,12 @@ public class CourseController {
     public EduCourse getCourse(@PathVariable("courseId") String courseId){
         EduCourse course = courseService.getCourse(courseId);
         return course;
+    }
+
+
+    @RequestMapping("/course/sectionLoadData/{cid}")
+    public List<EduCourseKpoint> getCourseKpoint(@PathVariable("cid") String cid){
+        List<EduCourseKpoint> eduCourseKpointList= courseService.getCourseKpointList(cid);
+        return eduCourseKpointList;
     }
 }

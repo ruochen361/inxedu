@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/doc.min.css">
-    <link rel="stylesheet" type="text/css" href="/webuploader/webuploader.css">
     <style>
         .tree li {
             list-style-type: none;
@@ -25,7 +24,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">教育平台 - 添加讲师</a></div>
+            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">教育平台 - 添加专业</a></div>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -73,51 +72,26 @@
             <div class="panel panel-default">
                 <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
                 <div class="panel-body">
-                    <form id="updateForm" action="http://localhost:9002/teacher/doAdd" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="name">讲师名称</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="请输入讲师名称">
+                    <form id="addForm" method="post">
+                        <div  class="form-group">
+                            <label type="hidden" for="parentId"></label>
+                            <input th:value="${parentId}" type="hidden" class="form-control" id="parentId" name="parentId" >
+                        </div>
+                        <div  class="form-group">
+                            <label type="hidden" for="status"></label>
+                            <input type="hidden" value="0" class="form-control" id="status" name="status" >
                         </div>
                         <div class="form-group">
-                            <label for="education">讲师资历</label>
-                            <input type="text" class="form-control" id="education" name="education" placeholder="请输入讲师资历">
+                            <label for="subjectName">专业名称</label>
+                            <input  type="text" class="form-control" id="subjectName" name="subjectName" placeholder="请输入专业名称">
                         </div>
                         <div class="form-group">
-                            <label for="subjectId">讲师专业</label>
-                            <select id="subjectId"  name="subjectId">
-                                <div th:each="subject:${sysSubjectList}">
-                                    <option th:value="${subject.subjectId}" th:text="${subject.subjectName}"></option>
-                                </div>
-                            </select>
-                        </div><div class="form-group">
-                            <label for="isStar">讲师等级</label>
-                            <select id="isStar"  name="isStar">
-                                <option th:value="1" th:text="高级讲师"></option>
-                                <option th:value="2" th:text="首席教师"></option>
-                            </select>
+                            <label for="sort">排序</label>
+                            <input  type="text" class="form-control" id="sort" name="sort" placeholder="请添加排序">
                         </div>
-                        <div class="form-group">
-                            <label for="sort">讲师排序</label>
-                            <input type="text" class="form-control" id="sort" name="sort" placeholder="请输入讲师排序">
-                        </div>
-                        <div class="form-group">
-                            <label for="career">讲师简介</label>
-                            <input type="text" class="form-control" id="career" name="career" placeholder="请输入讲师简介">
-                        </div>
-                        <div class="form-group">
-                            <label for="teacherPic">讲师头像</label>
-                            <input type="file" class="form-control" id="teacherPic" name="teacherPic" placeholder="请输入讲师简介">
-                            <img id="" src="" style="display:none">
-                        </div>
-                        <!--<div class="form-group">
-                            <label>讲师头像</label>
-                            <div style="margin-bottom:5px">
-                                <img id="imgUrl" src="" style="display:none">
-                                <button id="addTeacherPic" type="button">添加图片</button>
-                                <button id="imgUploadBtn" type="button">上传图片</button>
-                            </div>
-                        </div>-->
-                        <button id="addBtn" type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+
+
+                        <button id="addBtn" type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 提交</button>
                         <button id="resetBtn" type="button" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
                     </form>
                 </div>
@@ -155,9 +129,7 @@
 <script src="/jquery/jquery-2.1.1.min.js"></script>
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/script/docs.min.js"></script>
-<script src="/jquery/layer/layer.js"></script>
 <script src="/jquery/jquery-form.min.js"></script>
-<script type="text/javascript" src="/webuploader/webuploader.js"></script>
 <script type="text/javascript">
     $(function () {
         $(".list-group-item").click(function(){
@@ -170,8 +142,6 @@
                 }
             }
         });
-
-        /*initUploader();*/
     });
     //重置数据
     $("#resetBtn").click(function(){
@@ -190,69 +160,25 @@
         $("#addBtn").click(function(){
 
             var options = {
-                url:"/teacher/doAdd",
+                url:"/subject/doAdd",
                 beforeSubmit : function(){
                     return true ; //必须返回true,否则,请求终止.
                 },
                 success : function(result){
+                    console.log(result.success);
                     if(result.success){
-                        window.location.href="http://localhost:9002/teacher/list";
+
+                        window.location.href="http://localhost:9003/subject/index";
                     }else{
                         alert(result.message)
                     }
                 }
             };
             //通过jquery的form表单异步提交表单
-            $("#updateForm").ajaxSubmit(options);
-            return ;
+            $("#addForm").ajaxSubmit(options);
+
         });
     });
-
-
-
-    //初始化上传控件uploader
-    function initUploader() {
-
-        console.log("初始化上传控件");
-
-        var teacherPic = $("#teacherPic");
-        //初始化上传控件
-        var imgUploader = WebUploader.create({
-            auto: false,
-            // swf文件路径
-            swf: '/webuploader/Uploader.swf',
-            // 文件接收路径
-            server: '/fileUpload',
-            // 选择文件的按钮。
-            pick: '#addTeacherPic',
-            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-            resize: false,
-            //设定文件大小上限 2M
-            fileSingleSizeLimit: 2 * 1024 * 1024,
-            //可接受的文件类型
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                mimeTypes: 'image/*'
-            }
-        });
-
-        // 上传成功时，要把生成的图片路径返回给表格的行中的url
-        console.log("初始化文件上传控件的响应--uploadSuccess");
-        imgUploader.on('uploadSuccess', function (file, response) {
-            console.log("上传完成：" + file.id + "||" + response._raw);
-            $("#imgUrl").attr("src",response._raw);
-        });
-
-        $('#imgUploadBtn').click(function () {
-            console.log("开始上传");
-            if (imgUploader.getFiles().length <= 0) {
-                $.messager().alert('警告', '没有需要上传的文件', 'warning');
-                return;
-            }
-            imgUploader.upload();
-        });
-    }
 
 </script>
 </body>

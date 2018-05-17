@@ -1,6 +1,7 @@
 package com.atguigu.inxedu.feignservice;
 
 import com.atguigu.inxedu.bean.EduTeacher;
+import com.atguigu.inxedu.bean.Page;
 import com.atguigu.inxedu.bean.SysSubject;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,4 +31,7 @@ public interface TeacherFeignService {
 
     @RequestMapping("/teacher/doUpdate")
     public void updateTeacher(@RequestBody EduTeacher eduTeacher);
+
+    @RequestMapping("/teacher/querylist")
+    public Page<EduTeacher> queryPage(@RequestBody Map<String, Object> paramMap);
 }

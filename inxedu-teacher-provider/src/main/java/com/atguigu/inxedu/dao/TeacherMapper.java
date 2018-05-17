@@ -10,4 +10,8 @@ import java.util.Map;
 public interface TeacherMapper extends Mapper<EduTeacher> {
 
     List<EduTeacher> queryTeacherList(Map<String, Object> paramMap);
+
+    Integer count(Map<String, Object> paramMap);
+
+    List<EduTeacher> queryList(Map<String, Object> paramMap);
 }

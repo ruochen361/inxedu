@@ -2,6 +2,7 @@ package com.atguigu.inxedu.beanutil;
 
 import com.atguigu.inxedu.bean.EduTeacher;
 import com.atguigu.inxedu.bean.EduUser;
+import com.atguigu.inxedu.bean.Page;
 import lombok.Data;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public class AjaxResult {
 
     private List<EduTeacher> teacherList;
 
+    private Page<EduTeacher> teacherPage;
 }

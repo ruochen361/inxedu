@@ -50,7 +50,6 @@ public class SubjectConsumerController {
             SysSubject child = subject;
             if (child.getParentId() == 0) {
                 root = child;
-                root.setOpen(true);
                 data.add(root);
             } else {
                 SysSubject parent = sysSubjectMap.get(child.getParentId());

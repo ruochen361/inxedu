@@ -52,7 +52,7 @@ public class EduCourse implements Serializable {
     @Column
     Integer subjectId;
     @Column
-    String  sybjectLink;
+    String  subjectLink;
     @Column
     Date addTime;
     @Column

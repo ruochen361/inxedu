@@ -181,4 +181,38 @@ public class TeacherConsumerController {
         }
         return result;
     }
+
+
+    @ResponseBody
+    @RequestMapping("/teacher/querylist")
+    public Object queryList(@RequestParam(value="pageno", required=false,defaultValue="1" ) String pageno,
+                            @RequestParam(value="pagesize",required=false,defaultValue="5")String pagesize,
+                            TeacherSearch teacherSearch){
+        AjaxResult ajaxResult = new AjaxResult();
+        try {
+            Map<String,Object> paramMap = new HashMap();
+            paramMap.put("pageno", pageno);
+            paramMap.put("pagesize", pagesize);
+            if (teacherSearch.getSearchKey()!=""){
+                paramMap.put("searchKey",teacherSearch.getSearchKey());
+            }
+            if (teacherSearch.getMinTime()!=""){
+                paramMap.put("minTime",teacherSearch.getMinTime());
+            }
+            if (teacherSearch.getMaxTime()!=""){
+                paramMap.put("maxTime",teacherSearch.getMaxTime());
+            }
+            paramMap.put("isStar", teacherSearch.getIsStar());
+            Page<EduTeacher> page = teacherFeignService.queryPage(paramMap);
+            ajaxResult.setTeacherPage(page);
+            ajaxResult.setSuccess(true);
+        } catch (Exception e) {
+            ajaxResult.setSuccess(false);
+            ajaxResult.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return  ajaxResult;
+
+    }
 }

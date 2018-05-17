@@ -1,5 +1,5 @@
 server:
-  port: 9002
+  port: 9003
 
 
 eureka:
@@ -8,12 +8,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:7001/eureka/
 
-
 spring:
   thymeleaf:
     mode: LEGACYHTML5
     cache: false
-
-
-fileServer:
-  url: http://file.server.com

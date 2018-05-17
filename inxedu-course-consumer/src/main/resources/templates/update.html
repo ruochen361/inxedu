@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/doc.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">教育平台 - 修改课程</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top: 8px;">
+                    <div class="btn-group">
+                        <button type="button"
+                                class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i>
+                            张三<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i>
+                                个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i>
+                                消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="${APP_PATH }/logout.do"><i
+                                    class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left: 10px; padding-top: 8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:include="treeInfo"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <ol class="breadcrumb">
+                <li><a href="#">首页</a></li>
+                <li><a href="#">数据列表</a></li>
+                <li class="active">新增</li>
+            </ol>
+            <div class="panel panel-default">
+                <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
+                <div class="panel-body">
+                    <form id="updateForm">
+                        <div  class="form-group">
+                            <label type="hidden" for="courseId"></label>
+                            <input th:value="${course.courseId}" type="hidden" class="form-control" id="courseId" name="courseId" placeholder="请输入讲师名称">
+                        </div>
+                        <div class="form-group">
+                            <label for="courseName">课程名称</label>
+                            <input th:value="${course.courseName}" type="text" class="form-control" id="courseName" name="courseName" placeholder="请输入讲师名称">
+                        </div>
+                        <div class="form-group">
+                            <label>专业分类</label>
+
+                            <select name="province" id="province">
+                                <option value="" selected="selected">请选择</option>
+                            </select>
+                            <select name="city" id="city">
+                                <option value="" selected="selected">请选择</option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="isAvaliable">状态</label>
+                            <select id="isAvaliable"  name="isAvaliable" >
+                                <option th:selected="${course.isAvaliable==1}" th:value="1" th:text="正常"></option>
+                                <option th:selected="${course.isAvaliable==2}" th:value="2" th:text="删除"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="lessionNum">总课时</label>
+                            <input th:value="${course.lessionNum}" type="text" class="form-control" id="lessionNum" name="lessionNum" placeholder="请输入讲师资历">
+                        </div>
+
+                        <div class="form-group" >
+                            <label for="sourcePrice">课程原价格</label>
+                            <input th:value="${course.sourcePrice}" type="text" class="form-control" id="sourcePrice" name="sourcePrice" placeholder="请输入讲师排序">
+                        </div>
+                        <div class="form-group">
+                            <label for="currentPrice">课程销售价格</label>
+                            <input th:value="${course.currentPrice}" type="text" class="form-control" id="currentPrice" name="currentPrice" placeholder="请输入讲师简介">
+                        </div>
+                        <div class="form-group">
+                            <label for="losetype">有效期类型</label>
+                            <select id="losetype"  name="losetype" >
+                                <option th:selected="${course.losetype==1}" th:value="1" th:text="到期时间"></option>
+                                <option th:selected="${course.losetype==0}" th:value="0" th:text="按天数"></option>
+                            </select>
+                        </div>
+                        <div th:if="${course.losetype==1}" class="form-group">
+                            <label for="endTime">到期时间</label>
+                            <input  th:value="${course.endTime}" type="date" class="form-control" id="endTime" name="endTime" placeholder="请输入讲师简介">
+                        </div>
+                        <div th:if="${course.losetype==0}" class="form-group">
+                            <label for="loseTime">按天数</label>
+                            <input  th:value="${course.loseTime}" type="date" class="form-control" id="loseTime" name="loseTime" placeholder="请输入讲师简介">天
+                        </div>
+                        <div class="form-group">
+                            <label for="teacherList">添加教师</label>
+                            <select class="selectpicker show-tick"  multiple  data-actions-box="true" id="teacherList"  name="teacherList" >
+                                <div th:each="teacher:${allTeacher}">
+                                    <div th:each="myteacher,stat:${course.teacherList}">
+                                    <option th:selected="${teacher.id==myteacher.id}" th:if="${!(teacher.id!=myteacher.id&&stat.index!=0)}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
+                                    </div>
+                                </div>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pageBuycount">销售数量</label>
+                            <input th:value="${course.pageBuycount}" type="text" class="form-control" id="pageBuycount" name="pageBuycount" placeholder="请输入讲师简介">
+                        </div>
+                        <div class="form-group">
+                            <label for="pageViewcount">浏览量</label>
+                            <input th:value="${course.pageViewcount}" type="text" class="form-control" id="pageViewcount" name="pageViewcount" placeholder="请输入讲师简介">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">课程简介</label>
+                            <input th:value="${course.title}" type="text" class="form-control" id="title" name="title" placeholder="请输入讲师简介">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="logourl">课程图片</label>
+                            <input type="file" class="form-control" id="logourl" name="logourl" placeholder="请添加讲师头像">
+                            <img th:src="${course.logo}" style="width:200px;height: 240px" >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="context">课程详情</label>
+                            <div id="editor" >
+                                <p th:text="${course.context}" id="context" th:name="context">
+                                    <!--<input th:value="${course.context}" type="text" id="context" name="context" placeholder="请输入讲师简介">-->
+                                </p>
+                            </div>
+                        </div>
+
+                        <button id="updateBtn" type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 提交</button>
+                        <button id="resetBtn" type="button" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">帮助</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-callout bs-callout-info">
+                    <h4>测试标题1</h4>
+                    <p>测试内容1，测试内容1，测试内容1，测试内容1，测试内容1，测试内容1</p>
+                </div>
+                <div class="bs-callout bs-callout-info">
+                    <h4>测试标题2</h4>
+                    <p>测试内容2，测试内容2，测试内容2，测试内容2，测试内容2，测试内容2</p>
+                </div>
+            </div>
+            <!--
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+<script src="/jquery/jquery-2.1.1.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/script/docs.min.js"></script>
+<script src="/jquery/layer/layer.js"></script>
+<script src="/jquery/jquery-form.min.js"></script>
+<script src="/jquery/wangEditor.min.js"></script>
+<script src="/bootstrap/js/bootstrap-select.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function(){
+            if ( $(this).find("ul") ) {
+                $(this).toggleClass("tree-closed");
+                if ( $(this).hasClass("tree-closed") ) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+        loaddata();
+    });
+
+    //富文本编辑器
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.create();
+
+    //重置数据
+    $("#resetBtn").click(function(){
+        $("#updateForm")[0].reset();
+    });
+    var province = document.getElementById('province');
+    var city = document.getElementById('city');
+    var provinceArr = [];
+    var cityArr = [];
+
+    function loaddata() {
+        $.ajax({
+            type: "post",
+            url: "/subject/loadData",
+            data: {},
+            success: function (result) {
+                var data = result;
+                $.each(data, function (i, n) {
+                    provinceArr[i] = n.subjectName;
+                    var child = n.children;
+                    var childArray = [];
+                    var childId=[];
+                    childArray[0] = n.subjectName;
+                    $.each(child, function (j, m) {
+                        childArray[j + 1] = m;
+                    });
+                    cityArr[i] = childArray;
+                })
+                for (var key in provinceArr) {
+                    var provinceOption = document.createElement('option');
+                    provinceOption.value = provinceOption.text = provinceArr[key];
+                    province.options.add(provinceOption);
+                }
+            }
+
+        })
+
+    }
+
+    //生成市县、区市'
+    //@current为当前选择的select节点，即父类节点
+    //@child为子类点
+    //@childArr为子节点数组
+    function showChild(current, child, childArr) {
+        var currentValue = current.value;
+        var count = childArr.length;
+//每次切换市'把城市的子option长度设置市',即清除城市的选择,DOM对象select元素是长度是子option的个市'
+        child.length = 1;
+        for (var i = 0; i < count; i++) {
+//推断所选的值即父类，与当前节点第一个数组元素是否相市'
+            if (currentValue == childArr[i][0]) {
+//不取第一个数组元市'由于第一个是父类，所以j市'開始，而不市'
+                for (var j = 1; j < childArr[i].length; j++) {
+                    var childOption = document.createElement('option');
+//ie不支持option对象的value,所以加childOption.text
+                    childOption.value = childArr[i][j].subjectId;
+                    console.log(childArr[i][j].subjectId);
+                    childOption.text = childArr[i][j].subjectName;
+                    child.options.add(childOption);
+                }
+            }
+        }
+    }
+
+    //省份改变市'
+    province.onchange = function () {
+        showChild(province, city, cityArr);
+    }
+
+
+
+
+    //异步提交
+    $(function () {
+        $("#updateBtn").click(function(){
+            $.ajax({
+                type:"post",
+                url:"/teacher/doUpdate",
+                data:{
+                    courseId:$("#courseId").val(),
+                    courseName:$("#courseName").val(),
+                    subjectId:$("#subjectId").val(),
+                    isAvaliable:$("#isAvaliable").val(),
+                    lessionNum:$("#lessionNum").val(),
+                    sourcePrice:$("#sourcePrice").val(),
+                    currentPrice:$("#currentPrice").val(),
+                    losetype:$("#losetype").val(),
+                    endTime:$("#endTime").val(),
+                    loseTime:$("#loseTime").val(),
+                    teacherList:$("#teacherList").val(),
+                    pageBuycount:$("#pageBuycount").val(),
+                    pageViewcount:$("#pageViewcount").val(),
+                    title:$("#title").val(),
+                    logo:$("#logo").val(),
+                    context:editor.txt.text()
+                },
+                beforeSend : function(){
+                    return false; //必须返回true,否则,请求终止.
+                },
+                success : function(result){
+                    if(result.success){
+                        window.location.href="http://localhost:9002/teacher/list";
+                    }else{
+                        alert(result.message)
+                    }
+                }
+            });
+
+
+
+        });
+    });
+
+</script>
+</body>
+</html>

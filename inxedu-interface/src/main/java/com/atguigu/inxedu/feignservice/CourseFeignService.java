@@ -1,6 +1,7 @@
 package com.atguigu.inxedu.feignservice;
 
 import com.atguigu.inxedu.bean.EduCourse;
+import com.atguigu.inxedu.bean.EduCourseKpoint;
 import com.atguigu.inxedu.bean.SysSubject;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,4 +20,7 @@ public interface CourseFeignService {
 
     @RequestMapping("/course/toUpdate/{courseId}")
     public EduCourse getCourse(@PathVariable("courseId") String courseId);
+
+    @RequestMapping("/course/sectionLoadData/{cid}")
+    public List<EduCourseKpoint> getCourseKpoint(@PathVariable("cid") String cid);
 }
